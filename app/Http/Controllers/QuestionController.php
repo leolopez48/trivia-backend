@@ -18,27 +18,29 @@ class QuestionController extends Controller
      */
     public function nextQuestion(Request $request)
     {
-        // try {
-        $totalCategories = Category::count();
-        $randomIdCategory = Rand(1, $totalCategories);
+        try {
+            $totalCategories = Category::count();
+            $randomIdCategory = Rand(1, $totalCategories);
 
-        $category = Category::where('id', $randomIdCategory)->first();
-        $totalQuestions = Question::where('category_id', $randomIdCategory)->count();
+            $category = Category::where('id', $randomIdCategory)->first();
+            $totalQuestions = Question::where('category_id', $randomIdCategory)->count();
 
-        // Get the next question id
-        $randomId = 0;
-        $randomId = Rand(1, $totalQuestions);
+            // Get the next question id
+            $randomId = 0;
+            $randomId = Rand(1, $totalQuestions);
 
-        // Get the next question
-        $question = Question::where(['category_id' =>$randomIdCategory, 'id' => $randomId])->first();
+            // Get the next question
+            $question = Question::where(['category_id' =>$randomIdCategory, 'id' => $randomId])->first();
 
-        // Get the answers
-        $answers = Answer::where('question_id', $question->id)->get();
+            // Get the answers
+            $answers = Answer::where('question_id', $question->id)->get()->toArray();
+            //Randomize the answers
+            shuffle($answers);
 
-        // Getting the current game
-        $game = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
+            // Getting the current game
+            $game = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
 
-        return response()->json([
+            return response()->json([
                 "status" => "success",
                 "message" => "¡Felicidades! Has pasado al siguiente nivel.",
                 'question' => $question,
@@ -46,85 +48,85 @@ class QuestionController extends Controller
                 'category' => $category,
                 'game' => $game,
             ]);
-        // } catch (\Throwable $th) {
-        //     return response()->json([
-        //         "status" => "error",
-        //         "message" => "La siguiente pregunta no pudo ser obtenida.",
-        //         "trace" => $th
-        //     ]);
-        // }
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => "error",
+                "message" => "La siguiente pregunta no pudo ser obtenida.",
+                "trace" => $th
+            ]);
+        }
     }
 
     //Respond the question
     public function respond(Request $request)
     {
-        // try {
-        $question = Question::where('id', $request->question_id)->first();
-        $game = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
-        $answers = Answer::where([
-            'question_id' => $request->question_id
-        ])->get();
-        // Update the game
-        $scoreboard = Scoreboard::where(['user_id' => auth('api')->user()->id])->first();
+        try {
+            $question = Question::where('id', $request->question_id)->first();
+            $game = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
+            $answers = Answer::where([
+                'question_id' => $request->question_id
+            ])->get();
 
-        // Check if the answer is incorrect
-        if ($answers[0]->answer_name != $request->answer) {
-            $game->lifes_used += 1;
+            // Update the game
+            $scoreboard = Scoreboard::where(['user_id' => auth('api')->user()->id])->first();
 
-            // Check if the game is finished
-            if ($game->lifes_used >= 3) {
-                $game->lifes_used = 3;
-                $game->status = "Finalizado";
+            // Check if the answer is incorrect
+            if ($answers[0]->answer_name != $request->answer) {
+                $game->lifes_used += 1;
+
+                // Check if the game is finished
+                if ($game->lifes_used >= 3) {
+                    $game->lifes_used = 3;
+                    $game->status = "Finalizado";
 
 
 
-                $game->save();
-                return response()->json([
+                    $game->save();
+                    return response()->json([
                     "status" => "success",
                     "message" => "¡Vaya! Has perdido el juego.",
                     'game' => $game,
                 ]);
-            }
+                }
 
-            $game->save();
-            return response()->json([
+                $game->save();
+                return response()->json([
                 "status" => "error",
                 "message" => "La respuesta es incorrecta.",
                 'game' => $game,
             ]);
-        }
+            }
 
+            // Check if the answer is correct
+            $game->answers_corrects += 1;
+            $scoreboard->score += 1;
+            $scoreboard->save();
 
-        // Check if the answer is correct
-        $game->answers_corrects += 1;
-        $scoreboard->score += 1;
-        $scoreboard->save();
+            // Check if the game is finished
+            if ($game->answers_corrects == 15) {
+                $game->lifes_used = 3;
+                $game->status = "Finalizado";
 
-        // Check if the game is finished
-        if ($game->answers_corrects == 15) {
-            $game->lifes_used = 3;
-            $game->status = "Finalizado";
-
-            $game->save();
-            return response()->json([
+                $game->save();
+                return response()->json([
                 "status" => "success",
                 "message" => "¡Felicidades! Has completado el juego.",
             ]);
-        }
+            }
 
-        $game->save();
+            $game->save();
 
-        return response()->json([
+            return response()->json([
                 "status" => "success",
                 "message" => "¡Felicidades! La respuesta es correcta.",
                 'game' => $game,
             ]);
-        // } catch (\Throwable $th) {
-        //     return response()->json([
-        //         "status" => "error",
-        //         "message" => "La respuesta no pudo ser registrada.",
-        //     ]);
-        // }
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => "error",
+                "message" => "La respuesta no pudo ser registrada.",
+            ]);
+        }
     }
 
     /**
