@@ -1,4 +1,4 @@
-Proyecto de una aplicación de Trivia
+# Proyecto de una aplicación de Trivia
 
 ## Instalación
 
