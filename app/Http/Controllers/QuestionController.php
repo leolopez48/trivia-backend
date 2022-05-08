@@ -128,13 +128,19 @@ class QuestionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function index()
     {
-        //
+        $questions = Question::all();
+
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registros obtenidos correctamente.",
+            'questions'=>$questions
+        ]);
     }
 
     /**
@@ -145,29 +151,28 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $data = $request->all();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Question $question)
-    {
-        //
-    }
+        $category = Category::where('category_name', $data['category_name'])->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Question $question)
-    {
-        //
+        $question = Question::create([
+            'category_id' => $category->category_name,
+            'question_name' => $data['question_name'],
+        ]);
+
+        $answers = $data['answers'];
+        foreach ($answers as $answer) {
+            Answer::create([
+                'question_id' => $question->id,
+                'answer_name' => $question->answer_name,
+                'answer_correct' => $answer->answer_correct,
+            ]);
+        }
+
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registro creado correctamente."
+        ]);
     }
 
     /**
@@ -177,9 +182,13 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Question $question)
+    public function update(Request $request)
     {
-        //
+        Question::where('id', $request->id)->update($data);
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registro modificado correctamente."
+        ]);
     }
 
     /**
@@ -188,8 +197,12 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Question $question)
+    public function destroy($id)
     {
-        //
+        Question::where('id', $id)->delete();
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registro eliminado correctamente."
+        ]);
     }
 }

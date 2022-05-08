@@ -14,17 +14,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $categories = Category::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registros obtenidos correctamente.",
+            'categories'=>$categories
+        ]);
     }
 
     /**
@@ -35,29 +31,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        Category::insert($request->all());
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registro creado correctamente."
+        ]);
     }
 
     /**
@@ -67,9 +46,14 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request)
     {
-        //
+        Category::where('id', $request->id)->update($data);
+
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registro modificado correctamente."
+        ]);
     }
 
     /**
@@ -78,8 +62,13 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        Category::where('id', $id)->delete();
+
+        return response()->json([
+            "status"=>"success",
+            "message"=>"Registro eliminado correctamente."
+        ]);
     }
 }
