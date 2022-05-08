@@ -1,33 +1,10 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://www.cultura.gob.sv/wp-content/uploads/2021/06/MinisterioCultura.png" width="400"></a></p>
-
-# MC Framework
-
-Proyecto de desarrollo base para el Ministerio de Cultura
-
-## Características disponibles
-
--   Autenticación por JWT
--   Backups automáticos en el servidor y en una cuenta de OneDrive
--   Encriptación de valores
--   Componentes pre-fabricados
--   Log automático de las peticiones realizadas al servidor
--   Autenticación por LoginSV
--   Línea gráfica del GOES
--   Límite de peticiones hacia el servidor de 75 peticiones/min
--   Exportación de usuarios registrados a un CSV
--   Traducido al español
-
-## Módulos disponibles
-
--   Administración de usuarios
--   Administración de departamentos
--   Administración de Municipios
+Proyecto de una aplicación de Trivia
 
 ## Instalación
 
 ### Descargar el proyecto
 
-        git clone https://github.com/leolopezMC/base-app-mc
+        git clone https://github.com/leolopez48/trivia-backend
 
 ### Instalar las dependencias
 
