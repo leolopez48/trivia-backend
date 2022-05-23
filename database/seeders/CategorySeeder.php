@@ -18,28 +18,41 @@ class CategorySeeder extends Seeder
         Category::insert([
             [
                 'category_name' => 'Geography',
+                'url_img' => 'Geography.png',  
+                
             ],
-            // [
-            //     'category_name' => 'History',
-            // ],
-            // [
-            //     'category_name' => 'Science',
-            // ],
-            // [
-            //     'category_name' => 'Sports',
-            // ],
-            // [
-            //     'category_name' => 'Technology',
-            // ],
-            // [
-            //     'category_name' => 'Entertainment',
-            // ],
-            // [
-            //     'category_name' => 'Music',
-            // ],
-            // [
-            //     'category_name' => 'Movies',
-            // ],
+            [
+                'category_name' => 'Math',
+                'url_img' => 'Math.png', 
+            ],
+            [
+                'category_name' => 'History',
+                'url_img' => 'History.png', 
+            ],
+            [
+                'category_name' => 'Science',
+                'url_img' => 'Science.png',
+            ],
+            [
+                'category_name' => 'Sports',
+                'url_img' => 'Sports.png',
+            ],
+            [
+                'category_name' => 'Technology',
+                'url_img' => 'Technology.png',
+            ],
+            [
+                'category_name' => 'Entertainment',
+                'url_img' => 'Entertainment.png',
+            ],
+            [
+                'category_name' => 'Music',
+                'url_img' => 'Music.png',
+            ],
+            [
+                'category_name' => 'Videogames',
+                'url_img' => 'Videogames.png',
+            ],
         ]);
     }
 }

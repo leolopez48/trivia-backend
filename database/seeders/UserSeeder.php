@@ -44,6 +44,18 @@ class UserSeeder extends Seeder
         $user->assignRole($roleUser);
 
         $user = User::create([
+            'id' => 4,
+            'name' => 'Roberto',
+            'last_name' => 'Armijo',
+            'dui' => '12345675-9',
+            'email' => 'roberto@gmail.com',
+            'name' => 'Rob',
+            'password' => Hash::make('roberto23'),
+            'email_verified_at' => now(),
+        ]);
+        $user->assignRole($roleUser);
+
+        $user = User::create([
             'id' => 3,
             'name' => 'admin',
             'last_name' => 'admin',

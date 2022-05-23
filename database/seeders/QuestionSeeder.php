@@ -36,6 +36,24 @@ class QuestionSeeder extends Seeder
                 'question_name' => 'What is the capital of Germany?',
                  'category_id' => 1
             ],
+
+            //math
+            [
+                'question_name' => '¿A cuánto equivale π?',
+                 'category_id' => 2
+            ],
+            [
+                'question_name' => '¿Qué es un triángulo isósceles?',
+                 'category_id' => 2
+            ],
+            [
+                'question_name' => 'Juan tiene 20 años menos que su padre y este tiene el triple de los años de su hijo. ¿Qué edad tienen cada uno?',
+                 'category_id' => 2
+            ],
+            [
+                'question_name' => 'El monstruo del lago Ness mide 80 metros más la mitad de lo que mide, ¿cuánto mide el monstruo del lago Ness?',
+                 'category_id' => 2
+            ],
         ]);
     }
 }

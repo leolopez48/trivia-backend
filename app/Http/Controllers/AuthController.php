@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Scoreboard;
+use App\Models\User;
 use Encrypt;
 use Hash;
+use Maatwebsite\Excel\Concerns\ToArray;
 
 class AuthController extends Controller
 {
@@ -33,6 +37,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
+
         if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -40,9 +45,40 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
+
+    public function getCategorias()
+    {
+        $categories = Category::all();
+        return response()->json($categories);
+
+    }
+
+    public function getScoreboard()
+    {
+
+       $scoreboard = Scoreboard::orderByDesc('score')->get();
+       //return response()->json($scoreboard);
+
+       $data=[];
+       for($i = 1;$i<=$scoreboard->count();$i++)
+        {
+           $Username = User::where ('id', '=', Scoreboard::where('id', $i)->value('user_id'))->first();
+           $data[] = [
+                'id'=> Scoreboard::where('id', $i)->value('user_id'),
+                'username' => $Username->name,
+                'score'=> Scoreboard::where('id', $i)->value('score'),
+            ];
+            
+        }   
+        
+        $sortedData = collect($data)->sortBy('score')->reverse()->toArray();
+
+        return response()->json(collect($sortedData)->values()->all());     
+    }    
+
+
     /**
-     * Get the authenticated User.
-     *
+     * Get the authenticated User .
      * @return \Illuminate\Http\JsonResponse
      */
     public function me()

@@ -57,6 +57,50 @@ class QuestionController extends Controller
         }
     }
 
+
+
+    public function nextQuestionName(Request $request)
+    {
+        try {
+            $name_category=$request->category;
+
+            $id_category = Category::where('category_name', $name_category)->value('id');
+            //obtiene el array de los id de las preguntas
+            $id_questions = Question::where('category_id', $id_category)->pluck('id');
+            
+           //obtiene un valor aleatorio simple del array de arriba
+            $randomId = $id_questions[mt_rand(0, count($id_questions) - 1)];
+
+            // Get the next question
+            $question = Question::where(['category_id' =>$id_category, 'id' => $randomId])->first();
+
+            // Get the answers
+            $answers = Answer::where('question_id', $question->id)->get()->toArray();
+            //Randomize the answers
+            shuffle($answers);
+
+            // Getting the current game
+            $game = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
+            $total_question2=Question::where('category_id', $id_category)->count();
+            return response()->json([
+                "status" => "success",
+                "message" => "¡Felicidades! Has pasado al siguiente nivel.",
+                "total"=>$total_question2,
+                'question' => $question,
+                'answers' => $answers,
+                'category' => $name_category,
+                'game' => $game,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => "error",
+                "message" => "La siguiente pregunta no pudo ser obtenida.",
+                "trace" => $th
+            ]);
+        }
+    }
+
+
     //Respond the question
     public function respond(Request $request)
     {
@@ -68,7 +112,7 @@ class QuestionController extends Controller
             ])->get();
 
             // Update the game
-            $scoreboard = Scoreboard::where(['user_id' => auth('api')->user()->id])->first();
+           // $scoreboard = Scoreboard::where(['user_id' => auth('api')->user()->id])->first();
 
             // Check if the answer is incorrect
             if ($answers[0]->answer_name != $request->answer) {
@@ -99,8 +143,8 @@ class QuestionController extends Controller
 
             // Check if the answer is correct
             $game->answers_corrects += 1;
-            $scoreboard->score += 1;
-            $scoreboard->save();
+            //$scoreboard->score += 1;
+            //$scoreboard->save();
 
             // Check if the game is finished
             if ($game->answers_corrects == 15) {
