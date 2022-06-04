@@ -423,12 +423,12 @@ class QuestionSeeder extends Seeder
             ],
             [
                 "id" => 82,
-                "question_name" => "Qué uso tiene la inteligencia artificial",
+                "question_name" => "Qué hace el ordenador si pulsas Control + Z:",
                 "category_id" => 6,
             ],
             [
                 "id" => 83,
-                "question_name" => "Qué hace el ordenador si pulsas Control + Z:",
+                "question_name" => "Qué uso tiene la inteligencia artificial",
                 "category_id" => 6,
             ],
             [
@@ -453,7 +453,7 @@ class QuestionSeeder extends Seeder
             ],
             [
                 "id" => 88,
-                "question_name" => "Para clasificar contenido en las redes sociales",
+                "question_name" => "¿Qué es el SPAM?",
                 "category_id" => 6,
             ],
             [

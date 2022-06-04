@@ -9,44 +9,50 @@ use App\Models\User;
 use Encrypt;
 use Hash;
 use Maatwebsite\Excel\Concerns\ToArray;
-use \Illuminate\Http\Request; 
+use \Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    
     public function register(Request $request)
     {
+        try {
+            $userByEmail = User::where('email', $request->email)->first();
+            if ($userByEmail) {
+                return response()->json([
+                    "status" => "error",
+                    "message" => "El correo electrónico ya está registrado.",
+                ]);
+            }
 
-    try{
-        $user = User::create([
-            'name' => $request->name,
-            'last_name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-        Scoreboard::create([
-            'user_id' => $user->id,
-            'score' => 0,
-        ]);
-        
-        $this->login();
-        return response()->json([
+            $user = User::create([
+                'name' => $request->name,
+                'last_name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'email_verified_at' => now(),
+            ]);
+
+            Scoreboard::create([
+                'user_id' => $user->id,
+                'score' => 0,
+            ]);
+
+            $this->login();
+            return response()->json([
             'status' => 'success',
             'message' => 'Usuario registrado satisfactoriamente.',
             //'user' => $user,
-        ]);  
-
-        }catch (\Throwable $th) {
+        ]);
+        } catch (\Throwable $th) {
             return response()->json([
                 "status" => "error",
-                "message" => "Usuario no pudo ser registrado.",
+                "message" => "El usuario no pudo ser registrado.",
             ]);
         }
-        
     }
 
-    public function updateUser(Request $request){
-
+    public function updateUser(Request $request)
+    {
         $id = $request->id;
 
         $password = Hash::make($request->password);
@@ -63,7 +69,7 @@ class AuthController extends Controller
             "status"=>"success",
             "message"=>"Usuario Modificado correctamente.",
             "id"=>$id,
-            "data"=>$data,   
+            "data"=>$data,
         ]);
     }
 
@@ -89,31 +95,27 @@ class AuthController extends Controller
     {
         $categories = Category::all();
         return response()->json($categories);
-
     }
 
     public function getScoreboard()
     {
+        $scoreboard = Scoreboard::orderByDesc('score')->get();
+        //return response()->json($scoreboard);
 
-       $scoreboard = Scoreboard::orderByDesc('score')->get();
-       //return response()->json($scoreboard);
-
-       $data=[];
-       for($i = 1;$i<=$scoreboard->count();$i++)
-        {
-           $Username = User::where ('id', '=', Scoreboard::where('id', $i)->value('user_id'))->first();
-           $data[] = [
+        $data=[];
+        for ($i = 1;$i<=$scoreboard->count();$i++) {
+            $Username = User::where('id', '=', Scoreboard::where('id', $i)->value('user_id'))->first();
+            $data[] = [
                 'id'=> Scoreboard::where('id', $i)->value('user_id'),
                 'username' => $Username->name,
                 'score'=> Scoreboard::where('id', $i)->value('score'),
             ];
-            
-        }   
-        
+        }
+
         $sortedData = collect($data)->sortBy('score')->reverse()->toArray();
 
-        return response()->json(collect($sortedData)->values()->all());     
-    }    
+        return response()->json(collect($sortedData)->values()->all());
+    }
 
 
     /**
@@ -125,7 +127,7 @@ class AuthController extends Controller
         $user = auth('api')->user();
         $highestScore = Scoreboard::where('user_id', $user->id)->value('score');
         $id=$user->id;
-        $user = Encrypt::encryptValueObject($user, 'id'); 
+        $user = Encrypt::encryptValueObject($user, 'id');
         return response()->json([
             'status' => 'success',
             'message' => 'Usuario encontrado satisfactoriamente.',
