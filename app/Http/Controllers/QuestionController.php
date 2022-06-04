@@ -67,10 +67,15 @@ class QuestionController extends Controller
             $id_category = Category::where('category_name', $name_category)->value('id');
             //obtiene el array de los id de las preguntas
             $id_questions = Question::where('category_id', $id_category)->pluck('id');
+
+            $id_questions_anterior=$id_questions->toArray();
             
            //obtiene un valor aleatorio simple del array de arriba
             $randomId = $id_questions[mt_rand(0, count($id_questions) - 1)];
-
+              
+            //$id_questions_anterior = array_diff($id_questions_anterior, array($randomId)); 
+            //$randomId = $id_questions_anterior[mt_rand(0, count($id_questions_anterior) - 1)];
+            
             // Get the next question
             $question = Question::where(['category_id' =>$id_category, 'id' => $randomId])->first();
 

@@ -29,6 +29,7 @@ Route::group(
     ],
     function ($router) {
         Route::post('login', [AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register']);
         Route::get('getCategorias', [AuthController::class, 'getCategorias']);
         
     }
@@ -40,6 +41,7 @@ Route::group(
         'prefix' => 'game'
     ],
     function ($router) {
+        Route::post('updateUserInfo', [AuthController::class, 'updateUser']);
         Route::post('start', [GameController::class, 'startGame']);
         Route::get('getScoreboard', [GameController::class, 'getScoreboard']);
         Route::post('nextQuestion', [QuestionController::class, 'nextQuestionName']);
@@ -59,6 +61,6 @@ Route::group(
     function ($router) {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
-        Route::post('me', [AuthController::class, 'me']);
+        Route::get('me', [AuthController::class, 'me']);
     }
 );

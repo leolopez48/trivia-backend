@@ -17,42 +17,42 @@ class CategorySeeder extends Seeder
     {
         Category::insert([
             [
-                'category_name' => 'Geography',
-                'url_img' => 'Geography.png',  
-                
+                "category_name" => "Geografía",
+                "url_img" => "Geography.png",
             ],
             [
-                'category_name' => 'Math',
-                'url_img' => 'Math.png', 
+                "category_name" => "Matemáticas",
+                "url_img" => "Math.png",
             ],
             [
-                'category_name' => 'History',
-                'url_img' => 'History.png', 
+                "category_name" => "Historia",
+                "url_img" => "History.png",
             ],
             [
-                'category_name' => 'Science',
-                'url_img' => 'Science.png',
+                "category_name" => "Ciencias",
+                "url_img" => "Science.png",
             ],
             [
-                'category_name' => 'Sports',
-                'url_img' => 'Sports.png',
+                "category_name" => "Deportes",
+                "url_img" => "Sports.png",
             ],
             [
-                'category_name' => 'Technology',
-                'url_img' => 'Technology.png',
+                "category_name" => "Tecnología",
+                "url_img" => "Technology.png",
             ],
             [
-                'category_name' => 'Entertainment',
-                'url_img' => 'Entertainment.png',
+                "category_name" => "Entretenimiento",
+                "url_img" => "Entertainment.png",
             ],
             [
-                'category_name' => 'Music',
-                'url_img' => 'Music.png',
+                "category_name" => "Música",
+                "url_img" => "Music.png",
             ],
             [
-                'category_name' => 'Videogames',
-                'url_img' => 'Videogames.png',
+                "category_name" => "Videojuegos",
+                "url_img" => "Videogames.png",
             ],
+
         ]);
     }
 }
