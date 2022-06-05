@@ -11,13 +11,13 @@ class GameController extends Controller
 {
     public function startGame()
     {
-        $lastGame = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
+        // $lastGame = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
 
         /**
          * Verificando si el usuario ya tiene una partida iniciada
          */
-        if (empty($lastGame) || $lastGame->status == "Finalizado") {
-            $game = Game::create([
+        // if (empty($lastGame) || $lastGame->status == "Finalizado") {
+        $game = Game::create([
                 "user_id" => auth('api')->user()->id,
                 "total_lifes" => 3,
                 "lifes_used" => 0,
@@ -26,18 +26,18 @@ class GameController extends Controller
                 "answers_corrects" => 0,
             ]);
 
-            return response()->json([
+        return response()->json([
                 "status" => "success",
                 "message" => "Juego iniciado correctamente.",
                 "game" => $game,
             ]);
-        }
+        // }
 
-        return response()->json([
-            "status" => "success",
-            "message" => "Se encontró un juego sin finalizar.",
-            "game" => $lastGame,
-        ]);
+        // return response()->json([
+        //     "status" => "success",
+        //     "message" => "Se encontró un juego sin finalizar.",
+        //     "game" => $lastGame,
+        // ]);
     }
 
     public function getScoreboard()
