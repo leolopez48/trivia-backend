@@ -113,14 +113,15 @@ class QuestionController extends Controller
             $question = Question::where('id', $request->question_id)->first();
             $game = Game::where("user_id", auth('api')->user()->id)->orderBy("created_at", "desc")->first();
             $answers = Answer::where([
-                'question_id' => $request->question_id
+                'question_id' => $request->question_id,
+                'answer_name'=> $request->answer,
             ])->get();
 
             // Update the game
             // $scoreboard = Scoreboard::where(['user_id' => auth('api')->user()->id])->first();
 
             // Check if the answer is incorrect
-            if ($answers[0]->answer_name != $request->answer) {
+            if ($answers[0]->answer_correct != "Yes") {
                 $game->lifes_used += 1;
 
                 // Check if the game is finished
@@ -152,7 +153,7 @@ class QuestionController extends Controller
             //$scoreboard->save();
 
             // Check if the game is finished
-            if ($game->answers_corrects == 15) {
+            if ($game->answers_corrects == 3) {
                 $game->lifes_used = 3;
                 $game->status = "Finalizado";
 
